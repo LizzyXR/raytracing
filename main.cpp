@@ -8,13 +8,16 @@
 #include <string>
 using namespace std;
 
+// forward decleration for vect class
 class Vect;
 
+// helper functions
 char ray_char(Vect *ray, int refl);
 bool ray_done(Vect *ray);
-string setc(int row, int col);
+string set_cursor(int row, int col);
 bool key_is_pressed(KeySym ks);
 
+// direction class prototype, directions are represented with spherical coordinates
 class Direction {
 	public:
 		float ang_v;
@@ -22,6 +25,7 @@ class Direction {
 		Vect to_unit();
 };
 
+// vect class full definition
 class Vect {
 	public:
 		float x,y,z;
@@ -70,6 +74,7 @@ class Vect {
 		}
 };
 
+// Direction class function declerations
 inline Vect Direction::to_unit() {
 	Vect v  = {cos(ang_v)*cos(ang_h),cos(ang_v)*sin(ang_h),sin(ang_v)};
 	return v;
@@ -123,7 +128,9 @@ class Game {
 		}
 
 		void make_pic(void) {
+			// rays through equidistant points on width*height rectangle with distance 1 from viewer
 			Vect v1 = dir.to_unit();
+			// v2 points from the middle of the rectangle to the upper edge
 			Vect v2 = {
 				-tan(dir.ang_v)*v1.x,
 				-tan(dir.ang_v)*v1.y,
@@ -131,7 +138,8 @@ class Game {
 			};
 
 			v2.scale(height/2);
-
+			
+			// v3 points from the middle of the rectangle to the left edge
 			Vect v3 = {-v1.y,v1.x,0};
 			v3.normalize();
 			v3.scale(width/2);
@@ -147,6 +155,7 @@ class Game {
 					move.scale(RAYSTEP);
 
 					Vect ray = pos;
+					// trace ray
 					vector<float> dists_to_balls;
 					for(int i=0;i<balls.size();++i) dists_to_balls.push_back(0);
 
@@ -166,17 +175,19 @@ class Game {
 							ball_index++;
 						}
 
+						// optimization: test if all distances are large enough to make
+						// multiple steps at once
 						float min_dist = ray.z;
 						for(float f: dists_to_balls) if(f<min_dist) min_dist = f;
 
 						if(min_dist>RAYSTEP) {
 							int possible_steps = min_dist/RAYSTEP;
-							i += possible_steps - 1;
+							i += possible_steps - 1; // -1 because of the default increment
 							ray.add(move.scaled(possible_steps));
 						} else ray.add(move);
 					}
 
-					cout << setc(row,col) << ray_char(&ray,times_reflected) << flush;
+					cout << set_cursor(row,col) << ray_char(&ray,times_reflected) << flush;
 				}
 			}
 		}
@@ -218,24 +229,21 @@ class Game {
 			} else if(key==XK_Down) {
 				pos.x -= xmov;
 				pos.y -= ymov;
-			}
-
-			if(key==XK_Left) {
+			} else if(key==XK_Left) {
 				pos.x += ymov;
 				pos.y -= xmov;
-			}
-
-			if(key==XK_Right) {
+			} else if(key==XK_Right) {
 				pos.x -= ymov;
 				pos.y += xmov;
 			}
 		}
 
 		bool check_reflections(Vect *ray, Vect *move) {
+			// check if the ray has to be reflected on one of the objects and change dir accordingly
 			for(Ball ball: balls) {
 				if(ray->dist(ball.center)<ball.radius) {
 					*move = ball.reflect(*ray,*move);
-					return true;
+					return true; // only 1 reflection
 				}
 			}
 
@@ -243,17 +251,20 @@ class Game {
 		}
 };
 
-string setc(int row, int col) {
+// for setting the position of the cursor in the terminal window
+string set_cursor(int row, int col) {
 	return "\033[" + to_string(row) + ";" + to_string(col) + "H";
 }
 
+// the ray ends when it hits the floor at z=0
 bool ray_done(Vect *ray) {
 	return ray->z <= 0;
 }
 
+// determines whether a character is to be printed for a finished ray
 char ray_char(Vect *ray, int refl) {
 	char chars[] = {'.', '-', ','};
-	if(ray->z <= 0 && abs(((int) floor(ray->x))-((int)floor (ray->y)))%2==0) return '#';
+	if(ray->z <= 0 && abs(((int)floor(ray->x))-((int)floor(ray->y)))%2==0) return '#';
 	else if(refl>0) {
 		if(refl<4) return chars[refl-1];
 		else return '+';
@@ -277,14 +288,16 @@ int main(int argc, char *argv[]) {
 
 	int width, height;
 	if(argc==1) {
-		height = 100;
+		// if no window size is given, set the default to 100x200
 		width = 200;
+		height = 100;
 	} else {
-		height = stoi(argv[2]);
 		width = stoi(argv[1]);
+		height = stoi(argv[2]);
 	}
 
 	Game game = Game(start_pos, start_dir, 2, 2, width, height);
+	// add some bawlz
 	Ball b = {{5,0,2},2};
 	game.add_ball(b);
 
