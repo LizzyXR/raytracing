@@ -1,5 +1,5 @@
 # C++ raytracing!
-### note: this does NOT work on wayland, only X11
+## note: this does NOT work on wayland, only X11
 
 ### how to compile?
 ```
