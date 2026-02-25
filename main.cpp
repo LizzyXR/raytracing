@@ -148,15 +148,11 @@ class Game {
 
 					Vect ray = pos;
 					vector<float> dists_to_balls;
-					for(int i=0;i<balls.size();++i) {
-						dists_to_balls.push_back(0);
-					}
+					for(int i=0;i<balls.size();++i) dists_to_balls.push_back(0);
 
 					int times_reflected = 0;
 					for(int i=0;i<RAYSTEPS;++i) {
-						if(ray_done(&ray)) {
-							break;
-						}
+						if(ray_done(&ray)) break;
 
 						int ball_index = 0;
 						for(Ball b: balls) {
@@ -171,19 +167,13 @@ class Game {
 						}
 
 						float min_dist = ray.z;
-						for(float f: dists_to_balls) {
-							if(f<min_dist) {
-								min_dist = f;
-							}
-						}
+						for(float f: dists_to_balls) if(f<min_dist) min_dist = f;
 
 						if(min_dist>RAYSTEP) {
 							int possible_steps = min_dist/RAYSTEP;
 							i += possible_steps - 1;
 							ray.add(move.scaled(possible_steps));
-						} else {
-							ray.add(move);
-						}
+						} else ray.add(move);
 					}
 
 					cout << setc(row,col) << ray_char(&ray,times_reflected) << flush;
@@ -198,30 +188,18 @@ class Game {
 				make_pic();
 				for(int key: keys) {
 					if(key_is_pressed(key)) {
-						if(key_is_pressed(XK_Shift_L)) {
-							move_view(key);
-						} else {
-							move_position(key);
-						}
+						if(key_is_pressed(XK_Shift_L)) move_view(key);
+						else move_position(key);
 					}
 				}
 			}
 		}
 
 		void move_view(KeySym key) {
-			if(key==XK_Up) {
-				dir.ang_v += MOVE_ANGLE;
-			} else if(key==XK_Down) {
-				dir.ang_v -= MOVE_ANGLE;
-			}
-
-			if(key==XK_Left) {
-				dir.ang_h -= MOVE_ANGLE;
-			}
-
-			if(key==XK_Right) {
-				dir.ang_h += MOVE_ANGLE;
-			}
+			if(key==XK_Up) dir.ang_v += MOVE_ANGLE;
+			else if(key==XK_Down) dir.ang_v -= MOVE_ANGLE;
+			else if(key==XK_Left) dir.ang_h -= MOVE_ANGLE;
+			else if(key==XK_Right) dir.ang_h += MOVE_ANGLE;
 		}
 
 		void move_position(KeySym key) {
@@ -275,17 +253,11 @@ bool ray_done(Vect *ray) {
 
 char ray_char(Vect *ray, int refl) {
 	char chars[] = {'.', '-', ','};
-	if(ray->z <= 0 && abs(((int) floor(ray->x))-((int)floor (ray->y)))%2==0) {
-		return '#';
-	} else if(refl>0) {
-		if(refl<4) {
-			return chars[refl-1];
-		} else {
-			return '+';
-		}
-	} else {
-		return ' ';
-	}
+	if(ray->z <= 0 && abs(((int) floor(ray->x))-((int)floor (ray->y)))%2==0) return '#';
+	else if(refl>0) {
+		if(refl<4) return chars[refl-1];
+		else return '+';
+	} else return ' ';
 }
 
 bool key_is_pressed(KeySym ks) {
