@@ -1,25 +1,22 @@
-# C++ raytracing!
-## note: this does NOT work on wayland, only X11
+> [!CAUTION]
+> This does NOT work on wayland, **only X11**
+<br/>
 
-### how to compile?
+## required packages
+***debian*** based: ``sudo apt -y install libx11-dev`` <br />
+***arch*** based: ``sudo pacman -S --noconfirm --needed libx11``
+
+### How to compile?
 ```
 g++ -O3 main.cpp -lX11 -o raytracing
 ```
 
-### ..but how do i run it?
+### ..but how do I run it?
 ```
 ./raytracing width height
 ```
+#
 <br />
 
-<hr />
-
-### note: if you're getting "Invalid MIT-MAGIC-COOKIE-1 key core dumped" upon running the program,
-**debian** based: ``sudo apt -y install libx11-dev`` <br />
-**arch** based: ``sudo pacman -S --noconfirm --needed libx11``
-<br /><br />then reboot.<hr />
-### warranty voiding options:
-
-run ``rm -rf ~/.Xauthority``, or ``export HWLOC_COMPONENTS="-gl"``
-
-if none of that worked, run ``echo $DISPLAY``, go to line 275 in main.cpp and change :0 to the number that the command echoed, then recompile.
+> [!NOTE]
+> If something isn't working accordingly, run ``echo $DISPLAY``, go to line 275 in ``main.cpp`` and change ``:0`` to the number that the command echoed, then recompile.
