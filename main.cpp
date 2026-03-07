@@ -1,3 +1,5 @@
+// i need to rewrite ts it sucks
+
 #include <iostream>
 #include <unistd.h>
 #include <stdio.h>
