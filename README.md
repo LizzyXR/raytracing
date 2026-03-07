@@ -2,6 +2,8 @@
 > This does NOT work on wayland, **only X11**
 <br/>
 
+# rewrite soon?
+
 ## required packages
 ***debian*** based: ``sudo apt -y install libx11-dev`` <br />
 ***arch*** based: ``sudo pacman -S --noconfirm --needed libx11``
