@@ -1,3 +1,5 @@
+###### rewritten in c99
+
 ### How to compile?
 ```
 cc -std=c99 -O2 -o raytracing raytracing.c -lm -lpthread
