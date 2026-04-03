@@ -10,4 +10,9 @@ install the [evtest](https://pkgs.org/search/?q=evtest) pkg
 
 ``sudo evtest``
 
-``./raytracing /dev/input/eventN width height``
+``./raytracing /dev/input/eventN cols rows``
+#
+### controls
+* w/a/s/d - move
+* arrow keys - look
+* q / esc - quit
