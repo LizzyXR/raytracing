@@ -11,6 +11,8 @@ install the [evtest](https://pkgs.org/search/?q=evtest) pkg
 ``sudo evtest``
 
 ``./raytracing /dev/input/eventN cols rows``
+>
+``N=your keyboard``
 #
 ### controls
 * w/a/s/d - move
