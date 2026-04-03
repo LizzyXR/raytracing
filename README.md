@@ -1,8 +1,8 @@
 > [!CAUTION]
-> This does NOT work on wayland, **only X11**
+> This version does NOT work on wayland, **only X11**
+> 
+> Switch to the **Wayland** branch to get the Wayland version
 <br/>
-
-# rewrite soon?
 
 ## required packages
 ***debian*** based: ``sudo apt -y install libx11-dev`` <br />
